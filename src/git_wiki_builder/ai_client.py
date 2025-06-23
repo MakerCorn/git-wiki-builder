@@ -4,10 +4,11 @@ import logging
 import os
 from typing import Any, Dict
 
+# Optional import for Anthropic AI
 try:
-    import anthropic  # type: ignore[import-not-found]
+    import anthropic  # type: ignore[import-not-found,unused-ignore]
 except ImportError:
-    anthropic = None
+    anthropic = None  # type: ignore[assignment,unused-ignore]
 
 from .config import Config
 
