@@ -1,8 +1,7 @@
 """Wiki content generator using AI."""
 
 import logging
-from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from .ai_client import AIClient, MockAIClient
 from .config import Config

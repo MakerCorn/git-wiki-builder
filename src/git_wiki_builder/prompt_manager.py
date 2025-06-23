@@ -1,8 +1,7 @@
 """Prompt management for AI content generation."""
 
 import logging
-from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict
 
 from .config import Config
 

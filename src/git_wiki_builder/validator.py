@@ -3,7 +3,7 @@
 import logging
 import re
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List
 
 from .config import Config
 
@@ -107,13 +107,11 @@ class MarkdownValidator:
         lines = content.split("\n")
 
         # Check if document starts with H1 (MD041)
-        first_heading_found = False
         for line in lines:
             line = line.strip()
             if line.startswith("#"):
                 if not line.startswith("# "):
                     errors.append("MD041: Document should start with top-level heading")
-                first_heading_found = True
                 break
             elif line:  # Non-empty, non-heading line
                 errors.append("MD041: Document should start with top-level heading")
@@ -153,7 +151,6 @@ class MarkdownValidator:
                     errors.append(f"MD023: Line {i}: Headings should not be indented")
 
                 # Check for space after hash (MD018)
-                hash_part = line.lstrip().split()[0]
                 if not re.match(r"^#+\s", line.lstrip()):
                     errors.append(f"MD018: Line {i}: No space after hash on atx style heading")
 

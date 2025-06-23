@@ -1,6 +1,5 @@
 """Command line interface for Git Wiki Builder."""
 
-import os
 import sys
 from pathlib import Path
 from typing import Optional
@@ -46,12 +45,12 @@ console = Console()
 @click.option(
     "--github-token",
     envvar="GITHUB_TOKEN",
-    help="GitHub token for wiki publishing (can be set via GITHUB_TOKEN env var)",
+    help=("GitHub token for wiki publishing " "(can be set via GITHUB_TOKEN env var)"),
 )
 @click.option(
     "--github-repo",
     envvar="GITHUB_REPOSITORY",
-    help="GitHub repository in format 'owner/repo' (can be set via GITHUB_REPOSITORY env var)",
+    help=("GitHub repository in format 'owner/repo' " "(can be set via GITHUB_REPOSITORY env var)"),
 )
 @click.option(
     "--ai-provider",
@@ -61,7 +60,7 @@ console = Console()
 )
 @click.option(
     "--ai-model",
-    help="AI model to use (e.g., gpt-4o-mini, gpt-4, claude-3-sonnet-20240229)",
+    help=("AI model to use " "(e.g., gpt-4o-mini, gpt-4, claude-3-sonnet-20240229)"),
 )
 @click.option(
     "--dry-run",

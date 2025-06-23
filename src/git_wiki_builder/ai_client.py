@@ -25,6 +25,7 @@ class MockAIClient:
         """Generate mock content."""
         page_name = context.get("page_name", "Unknown Page")
         project_name = context.get("project_name", "Unknown Project")
+        page_name_formatted = page_name.lower().replace("_", " ")
 
         return f"""# {page_name}
 
@@ -32,7 +33,7 @@ This is mock content generated for the {page_name} page of {project_name}.
 
 ## Overview
 
-This page would contain comprehensive documentation about {page_name.lower().replace('_', ' ')}.
+This page would contain documentation about {page_name_formatted}.
 
 ## Key Information
 

@@ -3,8 +3,6 @@
 import tempfile
 from pathlib import Path
 
-import pytest
-
 from git_wiki_builder.config import Config
 from git_wiki_builder.validator import MarkdownValidator
 
@@ -153,9 +151,9 @@ def example():
             validator = MarkdownValidator(config)
 
             # Test fixing trailing spaces and multiple blank lines
-            content_spacing_issues = """# Title   
+            content_spacing_issues = """# Title
 
-This line has trailing spaces.   
+This line has trailing spaces.
 
 
 Multiple blank lines above.

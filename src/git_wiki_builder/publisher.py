@@ -63,7 +63,7 @@ class WikiPublisher:
             "Accept": "application/vnd.github.v3+json",
         }
 
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=30)
 
         if response.status_code == 404:
             raise ValueError(f"Repository {self.config.github_repo} not found or no access")
@@ -102,7 +102,7 @@ class WikiPublisher:
                 repo = git.Repo.init(wiki_repo_path)
 
                 # Add remote
-                origin = repo.create_remote("origin", wiki_url)
+                repo.create_remote("origin", wiki_url)
 
                 # Configure git user
                 self._configure_git_user(repo)
@@ -120,7 +120,7 @@ class WikiPublisher:
                 "Accept": "application/vnd.github.v3+json",
             }
 
-            response = requests.get(f"{self.github_api_base}/user", headers=headers)
+            response = requests.get(f"{self.github_api_base}/user", headers=headers, timeout=30)
 
             if response.status_code == 200:
                 user_data = response.json()
@@ -214,7 +214,7 @@ class WikiPublisher:
                     try:
                         origin.push("HEAD:master")
                         logger.info("Pushed changes to master branch")
-                    except git.exc.GitCommandError as e:
+                    except git.exc.GitCommandError:
                         # For existing wikis, just push
                         origin.push()
                         logger.info("Pushed changes to remote")

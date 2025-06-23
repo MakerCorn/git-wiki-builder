@@ -3,8 +3,6 @@
 import tempfile
 from pathlib import Path
 
-import pytest
-
 from git_wiki_builder.config import Config
 from git_wiki_builder.content_analyzer import ContentAnalyzer
 

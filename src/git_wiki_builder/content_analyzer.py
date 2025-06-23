@@ -4,7 +4,7 @@ import logging
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 
 try:
     import tomllib  # type: ignore[import-not-found]
@@ -14,7 +14,6 @@ except ImportError:
     except ImportError:
         tomllib = None
 
-import yaml
 
 from .config import Config
 
@@ -41,7 +40,7 @@ class ProjectAnalysis:
 
 
 class ContentAnalyzer:
-    """Analyzes project content to understand structure and generate appropriate wiki content."""
+    """Analyzes project content to understand structure and generate wiki content."""
 
     def __init__(self, config: Config) -> None:
         """Initialize content analyzer.
@@ -132,7 +131,7 @@ class ContentAnalyzer:
                         return str(data["project"]["name"])
             except Exception:
                 # Fallback for Python < 3.11 or other errors
-                pass
+                logger.debug("Failed to parse pyproject.toml")
 
         # Try package.json
         package_json_path = self.config.repo_path / "package.json"
