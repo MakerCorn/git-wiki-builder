@@ -2,10 +2,9 @@
 
 import tempfile
 from pathlib import Path
-from unittest.mock import MagicMock, Mock, call, patch
+from unittest.mock import Mock, call, patch
 
 import pytest
-import requests
 
 from git_wiki_builder.config import Config
 from git_wiki_builder.publisher import WikiPublisher

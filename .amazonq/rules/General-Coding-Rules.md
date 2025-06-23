@@ -26,4 +26,4 @@
 - When generating code, run tests on the code to validate parameters and linting.
 - When fixing code, analyze the root cause rather than just fixing the identified problem. For example, don't just fix parameters to match a parameter list, understand what the code was trying to do and fix the core problem.
 - Remove deprecated classes and tests when refactoring code.
-  
+- Always fix all errors, warnings, and issues. Do not just fix critical or high priority items.

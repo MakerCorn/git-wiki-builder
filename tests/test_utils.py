@@ -1,11 +1,7 @@
 """Tests for utility functions."""
 
 import logging
-import sys
-from io import StringIO
 from unittest.mock import patch
-
-import pytest
 
 from git_wiki_builder.utils import (
     extract_title_from_markdown,
@@ -22,9 +18,7 @@ class TestSetupLogging:
 
     def test_setup_logging_verbose(self) -> None:
         """Test verbose logging setup."""
-        # Capture log output
-        log_capture = StringIO()
-        handler = logging.StreamHandler(log_capture)
+        # Test verbose logging setup
 
         with patch("logging.basicConfig") as mock_config:
             setup_logging(verbose=True)

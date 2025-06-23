@@ -151,7 +151,7 @@ class TestAIClient:
                     AIClient(config)
 
     def test_init_github_openai_not_installed(self) -> None:
-        """Test initialization with GitHub provider when OpenAI not installed."""
+        """Test GitHub provider initialization when OpenAI not installed."""
         with tempfile.TemporaryDirectory() as temp_dir:
             repo_path = Path(temp_dir)
             (repo_path / "README.md").write_text("# Test Project")
@@ -168,7 +168,7 @@ class TestAIClient:
                     AIClient(config)
 
     def test_init_openai_not_installed(self) -> None:
-        """Test initialization with OpenAI provider when OpenAI not installed."""
+        """Test OpenAI provider initialization when OpenAI not installed."""
         with tempfile.TemporaryDirectory() as temp_dir:
             repo_path = Path(temp_dir)
             (repo_path / "README.md").write_text("# Test Project")

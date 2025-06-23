@@ -4,8 +4,6 @@ import tempfile
 from pathlib import Path
 from unittest.mock import Mock, patch
 
-import pytest
-
 from git_wiki_builder.config import Config
 from git_wiki_builder.content_analyzer import ProjectAnalysis
 from git_wiki_builder.generator import WikiGenerator
@@ -209,7 +207,8 @@ class TestWikiGenerator:
             config = Config(repo_path=repo_path)
             generator = WikiGenerator(config, mock_mode=True)
 
-            # Mock config.wiki_structure property to return structure with empty section
+            # Mock config.wiki_structure property to return structure
+            # with empty section
             original_structure = config.wiki_structure.copy()
             original_structure["Empty Section"] = []
 
@@ -289,9 +288,8 @@ class TestWikiGenerator:
             context = call_args[0][1]  # Second argument is context
 
             assert context["project_name"] == "Test Project"
-            assert (
-                context["project_description"] == "A test project for analysis"
-            )
+            expected_desc = "A test project for analysis"
+            assert context["project_description"] == expected_desc
             assert "navigation" in context
             assert len(context["navigation"]) == 2
 
