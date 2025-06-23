@@ -103,26 +103,43 @@ class Config:
     def _validate(self) -> None:
         """Validate configuration."""
         if not self.repo_path.exists():
-            raise ValueError(f"Repository path does not exist: {self.repo_path}")
+            raise ValueError(
+                f"Repository path does not exist: {self.repo_path}"
+            )
 
         if self.ai_provider not in ["github", "openai", "anthropic"]:
             raise ValueError(f"Unsupported AI provider: {self.ai_provider}")
 
         # Validate GitHub repository format
         if self.github_repo and "/" not in self.github_repo:
-            raise ValueError("GitHub repository must be in format 'owner/repo'")
+            raise ValueError(
+                "GitHub repository must be in format 'owner/repo'"
+            )
 
     def validate_for_generation(self) -> None:
-        """Validate configuration for content generation (requires API keys)."""
+        """Validate configuration for content generation.
+
+        Requires API keys.
+        """
         # Check for required API keys
         if self.ai_provider == "github" and not os.getenv("GITHUB_TOKEN"):
-            raise ValueError("GITHUB_TOKEN environment variable is required for GitHub Models")
+            raise ValueError(
+                "GITHUB_TOKEN environment variable is required for GitHub "
+                "Models"
+            )
 
         if self.ai_provider == "openai" and not os.getenv("OPENAI_API_KEY"):
-            raise ValueError("OPENAI_API_KEY environment variable is required for OpenAI")
+            raise ValueError(
+                "OPENAI_API_KEY environment variable is required for OpenAI"
+            )
 
-        if self.ai_provider == "anthropic" and not os.getenv("ANTHROPIC_API_KEY"):
-            raise ValueError("ANTHROPIC_API_KEY environment variable is required for Anthropic")
+        if self.ai_provider == "anthropic" and not os.getenv(
+            "ANTHROPIC_API_KEY"
+        ):
+            raise ValueError(
+                "ANTHROPIC_API_KEY environment variable is required for "
+                "Anthropic"
+            )
 
     @property
     def docs_path(self) -> Path:
@@ -143,11 +160,19 @@ class Config:
         """Get the default wiki structure."""
         return {
             "Home": ["overview", "quick_start"],
-            "Getting Started": ["installation", "configuration", "first_steps"],
+            "Getting Started": [
+                "installation",
+                "configuration",
+                "first_steps",
+            ],
             "User Guide": ["features", "usage", "examples"],
             "API Reference": ["api_overview", "endpoints", "authentication"],
             "Development": ["contributing", "development_setup", "testing"],
-            "Deployment": ["deployment_guide", "environment_setup", "troubleshooting"],
+            "Deployment": [
+                "deployment_guide",
+                "environment_setup",
+                "troubleshooting",
+            ],
             "FAQ": ["common_questions", "known_issues"],
             "Changelog": ["release_notes", "migration_guide"],
         }
@@ -177,7 +202,9 @@ class Config:
                 if config_file.suffix.lower() in [".yml", ".yaml"]:
                     custom_config = yaml.safe_load(f) or {}
                 else:
-                    raise ValueError(f"Unsupported config file format: {config_file.suffix}")
+                    raise ValueError(
+                        f"Unsupported config file format: {config_file.suffix}"
+                    )
 
         # Look for default config file
         elif not config_file:

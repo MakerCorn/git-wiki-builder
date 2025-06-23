@@ -94,7 +94,9 @@ Format the response as clean markdown with proper heading hierarchy.
         # Return default prompt based on page type
         return self._get_default_page_prompt(page_name, section_name)
 
-    def _get_default_page_prompt(self, page_name: str, section_name: str) -> str:
+    def _get_default_page_prompt(
+        self, page_name: str, section_name: str
+    ) -> str:
         """Get default prompt for page type."""
         page_lower = page_name.lower()
         section_lower = section_name.lower()
@@ -356,7 +358,8 @@ Format as clean markdown with proper code blocks and explanations.
     def _get_generic_prompt(self) -> str:
         """Get generic prompt for any page."""
         return """
-Create comprehensive documentation for the "{page_name}" page in the {section_name} section of the {project_name} wiki.
+Create comprehensive documentation for the "{page_name}" page in the
+{section_name} section of the {project_name} wiki.
 
 Project Information:
 - Name: {project_name}

@@ -55,7 +55,9 @@ def sanitize_filename(filename: str) -> str:
     return filename
 
 
-def truncate_text(text: str, max_length: int = 100, suffix: str = "...") -> str:
+def truncate_text(
+    text: str, max_length: int = 100, suffix: str = "..."
+) -> str:
     """Truncate text to specified length.
 
     Args:

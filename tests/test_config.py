@@ -20,7 +20,9 @@ class TestConfig:
             repo_path = Path(temp_dir)
 
             # Create a README file
-            (repo_path / "README.md").write_text("# Test Project\nA test project")
+            (repo_path / "README.md").write_text(
+                "# Test Project\nA test project"
+            )
 
             config = Config(repo_path=repo_path)
 
@@ -36,10 +38,15 @@ class TestConfig:
             config_file = repo_path / "config.yml"
 
             # Create README and config files
-            (repo_path / "README.md").write_text("# Test Project\nA test project")
+            (repo_path / "README.md").write_text(
+                "# Test Project\nA test project"
+            )
 
             config_data = {
-                "ai": {"provider": "anthropic", "model": "claude-3-sonnet-20240229"},
+                "ai": {
+                    "provider": "anthropic",
+                    "model": "claude-3-sonnet-20240229",
+                },
                 "validation": {"skip": True},
             }
 
@@ -56,11 +63,16 @@ class TestConfig:
         """Test configuration from environment variables."""
         with tempfile.TemporaryDirectory() as temp_dir:
             repo_path = Path(temp_dir)
-            (repo_path / "README.md").write_text("# Test Project\nA test project")
+            (repo_path / "README.md").write_text(
+                "# Test Project\nA test project"
+            )
 
             with patch.dict(
                 os.environ,
-                {"GITHUB_TOKEN": "test-token", "GITHUB_REPOSITORY": "owner/repo"},
+                {
+                    "GITHUB_TOKEN": "test-token",
+                    "GITHUB_REPOSITORY": "owner/repo",
+                },
             ):
                 config = Config(
                     repo_path=repo_path,
@@ -75,14 +87,18 @@ class TestConfig:
         """Test configuration validation errors."""
         with tempfile.TemporaryDirectory() as temp_dir:
             repo_path = Path(temp_dir)
-            (repo_path / "README.md").write_text("# Test Project\nA test project")
+            (repo_path / "README.md").write_text(
+                "# Test Project\nA test project"
+            )
 
             # Test invalid AI provider
             with pytest.raises(ValueError, match="Unsupported AI provider"):
                 Config(repo_path=repo_path, ai_provider="invalid")
 
             # Test invalid repository format
-            with pytest.raises(ValueError, match="GitHub repository must be in format"):
+            with pytest.raises(
+                ValueError, match="GitHub repository must be in format"
+            ):
                 Config(repo_path=repo_path, github_repo="invalid-format")
 
     def test_readme_detection(self) -> None:

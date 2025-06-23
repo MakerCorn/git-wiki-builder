@@ -68,7 +68,9 @@ class MarkdownValidator:
 
         is_valid = len(errors) == 0
 
-        return ValidationResult(is_valid=is_valid, errors=errors, warnings=warnings)
+        return ValidationResult(
+            is_valid=is_valid, errors=errors, warnings=warnings
+        )
 
     def fix_content(self, content: str) -> str:
         """Automatically fix common markdown issues.
@@ -111,10 +113,14 @@ class MarkdownValidator:
             line = line.strip()
             if line.startswith("#"):
                 if not line.startswith("# "):
-                    errors.append("MD041: Document should start with top-level heading")
+                    errors.append(
+                        "MD041: Document should start with top-level heading"
+                    )
                 break
             elif line:  # Non-empty, non-heading line
-                errors.append("MD041: Document should start with top-level heading")
+                errors.append(
+                    "MD041: Document should start with top-level heading"
+                )
                 break
 
         # Check heading level increments (MD001) and multiple H1s (MD025)
@@ -130,7 +136,9 @@ class MarkdownValidator:
                     h1_count += 1
 
                 if level > prev_level + 1:
-                    errors.append(f"MD001: Heading level increment too large (#{level})")
+                    errors.append(
+                        f"MD001: Heading level increment too large (#{level})"
+                    )
 
                 prev_level = level
 
@@ -148,16 +156,22 @@ class MarkdownValidator:
             if line.lstrip().startswith("#"):
                 # Check for indented headings (MD023)
                 if line.startswith(" ") or line.startswith("\t"):
-                    errors.append(f"MD023: Line {i}: Headings should not be indented")
+                    errors.append(
+                        f"MD023: Line {i}: Headings should not be indented"
+                    )
 
                 # Check for space after hash (MD018)
                 if not re.match(r"^#+\s", line.lstrip()):
-                    errors.append(f"MD018: Line {i}: No space after hash on atx style heading")
+                    errors.append(
+                        f"MD018: Line {i}: No space after hash on atx style "
+                        f"heading"
+                    )
 
                 # Check for multiple spaces after hash (MD019)
                 if re.match(r"^#+\s{2,}", line.lstrip()):
                     errors.append(
-                        f"MD019: Line {i}: Multiple spaces after hash on atx style heading"
+                        f"MD019: Line {i}: Multiple spaces after hash "
+                        f"on atx style heading"
                     )
 
         return errors
@@ -185,12 +199,17 @@ class MarkdownValidator:
                 # Check indentation (MD007)
                 indent = len(line) - len(line.lstrip())
                 if indent % 2 != 0:
-                    issues.append(f"MD007: Line {i}: List indentation should be 2 spaces")
+                    issues.append(
+                        f"MD007: Line {i}: List indentation should be 2 spaces"
+                    )
 
             elif in_list and not stripped:
                 # End of list, check for blank lines around lists (MD032)
                 if i < len(lines) and lines[i].strip():
-                    issues.append(f"MD032: Line {i}: Lists should be surrounded by blank lines")
+                    issues.append(
+                        f"MD032: Line {i}: Lists should be surrounded by "
+                        f"blank lines"
+                    )
                 in_list = False
 
         # Check for consistent list markers (MD004)
@@ -213,13 +232,15 @@ class MarkdownValidator:
                     # Starting a code block
                     if line.strip() == "```":
                         errors.append(
-                            f"MD040: Line {i}: Fenced code blocks should have a language specified"
+                            f"MD040: Line {i}: Fenced code blocks should have "
+                            f"a language specified"
                         )
 
                     # Check for blank line before (MD031)
                     if i > 1 and lines[i - 2].strip():
                         errors.append(
-                            f"MD031: Line {i}: Fenced code blocks should be surrounded by blank lines"
+                            f"MD031: Line {i}: Fenced code blocks should be "
+                            f"surrounded by blank lines"
                         )
 
                     in_fenced_block = True
@@ -228,7 +249,8 @@ class MarkdownValidator:
                     # Check for blank line after (MD031)
                     if i < len(lines) and lines[i].strip():
                         errors.append(
-                            f"MD031: Line {i}: Fenced code blocks should be surrounded by blank lines"
+                            f"MD031: Line {i}: Fenced code blocks should be "
+                            f"surrounded by blank lines"
                         )
 
                     in_fenced_block = False
@@ -249,7 +271,9 @@ class MarkdownValidator:
             # Check for images without alt text (MD045)
             img_pattern = r"!\[\s*\]\([^)]+\)"
             if re.search(img_pattern, line):
-                issues.append(f"MD045: Line {i}: Images should have alternate text")
+                issues.append(
+                    f"MD045: Line {i}: Images should have alternate text"
+                )
 
             # Check for reversed link syntax (MD011)
             reversed_link_pattern = r"\([^)]+\)\[[^\]]*\]"
@@ -267,7 +291,8 @@ class MarkdownValidator:
 
         for i, line in enumerate(lines, 1):
             # Check for trailing spaces (MD009)
-            if line.endswith(" ") and not line.endswith("  "):  # Allow 2+ spaces for line breaks
+            # Allow 2+ spaces for line breaks
+            if line.endswith(" ") and not line.endswith("  "):
                 issues.append(f"MD009: Line {i}: Trailing spaces")
 
             # Check for tabs (MD010)
@@ -278,7 +303,9 @@ class MarkdownValidator:
             if not line.strip():
                 consecutive_blank_lines += 1
                 if consecutive_blank_lines > 1:
-                    issues.append(f"MD012: Line {i}: Multiple consecutive blank lines")
+                    issues.append(
+                        f"MD012: Line {i}: Multiple consecutive blank lines"
+                    )
             else:
                 consecutive_blank_lines = 0
 
@@ -292,7 +319,11 @@ class MarkdownValidator:
         for i, line in enumerate(lines):
             if line.strip().startswith("#"):
                 # Add blank line before heading if needed
-                if i > 0 and lines[i - 1].strip() and not fixed_lines[-1] == "":
+                if (
+                    i > 0
+                    and lines[i - 1].strip()
+                    and not fixed_lines[-1] == ""
+                ):
                     fixed_lines.append("")
 
                 fixed_lines.append(line)
@@ -403,31 +434,55 @@ class MarkdownValidator:
 
         return content
 
-    def _guess_code_language(self, lines: List[str], code_block_start: int) -> str:
+    def _guess_code_language(
+        self, lines: List[str], code_block_start: int
+    ) -> str:
         """Guess programming language for code block."""
         # Look at surrounding context and code content
-        context_lines = lines[max(0, code_block_start - 5) : code_block_start + 10]
+        context_lines = lines[
+            max(0, code_block_start - 5) : code_block_start + 10
+        ]
         context = " ".join(context_lines).lower()
 
         # Simple heuristics for language detection
-        if any(keyword in context for keyword in ["python", "pip", "import", "def ", "class "]):
+        if any(
+            keyword in context
+            for keyword in ["python", "pip", "import", "def ", "class "]
+        ):
             return "python"
         elif any(
             keyword in context
-            for keyword in ["javascript", "js", "npm", "function", "const ", "let "]
+            for keyword in [
+                "javascript",
+                "js",
+                "npm",
+                "function",
+                "const ",
+                "let ",
+            ]
         ):
             return "javascript"
-        elif any(keyword in context for keyword in ["bash", "shell", "command", "$", "sudo"]):
+        elif any(
+            keyword in context
+            for keyword in ["bash", "shell", "command", "$", "sudo"]
+        ):
             return "bash"
-        elif any(keyword in context for keyword in ["json", "api", "response"]):
+        elif any(
+            keyword in context for keyword in ["json", "api", "response"]
+        ):
             return "json"
         elif any(keyword in context for keyword in ["yaml", "yml", "config"]):
             return "yaml"
-        elif any(keyword in context for keyword in ["sql", "database", "select", "insert"]):
+        elif any(
+            keyword in context
+            for keyword in ["sql", "database", "select", "insert"]
+        ):
             return "sql"
         elif any(keyword in context for keyword in ["html", "web", "<", ">"]):
             return "html"
-        elif any(keyword in context for keyword in ["css", "style", "selector"]):
+        elif any(
+            keyword in context for keyword in ["css", "style", "selector"]
+        ):
             return "css"
         else:
             return "text"

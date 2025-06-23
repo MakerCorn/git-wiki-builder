@@ -40,7 +40,8 @@ class ProjectAnalysis:
 
 
 class ContentAnalyzer:
-    """Analyzes project content to understand structure and generate wiki content."""
+    """Analyzes project content to understand structure and generate wiki
+    content."""
 
     def __init__(self, config: Config) -> None:
         """Initialize content analyzer.
@@ -208,7 +209,9 @@ class ContentAnalyzer:
 
         for source_dir in source_dirs:
             source_path = (
-                self.config.repo_path / source_dir if source_dir else self.config.repo_path
+                self.config.repo_path / source_dir
+                if source_dir
+                else self.config.repo_path
             )
             if not source_path.exists():
                 continue
@@ -217,21 +220,26 @@ class ContentAnalyzer:
             python_files = list(source_path.rglob("*.py"))
             if python_files:
                 structure["Python"] = [
-                    str(f.relative_to(self.config.repo_path)) for f in python_files[:10]
+                    str(f.relative_to(self.config.repo_path))
+                    for f in python_files[:10]
                 ]
 
             # JavaScript/TypeScript files
-            js_files = list(source_path.rglob("*.js")) + list(source_path.rglob("*.ts"))
+            js_files = list(source_path.rglob("*.js")) + list(
+                source_path.rglob("*.ts")
+            )
             if js_files:
                 structure["JavaScript/TypeScript"] = [
-                    str(f.relative_to(self.config.repo_path)) for f in js_files[:10]
+                    str(f.relative_to(self.config.repo_path))
+                    for f in js_files[:10]
                 ]
 
             # Java files
             java_files = list(source_path.rglob("*.java"))
             if java_files:
                 structure["Java"] = [
-                    str(f.relative_to(self.config.repo_path)) for f in java_files[:10]
+                    str(f.relative_to(self.config.repo_path))
+                    for f in java_files[:10]
                 ]
 
         return structure
@@ -254,7 +262,9 @@ class ContentAnalyzer:
                 if req_file == "pyproject.toml":
                     dependencies.extend(self._extract_pyproject_deps(req_path))
                 elif req_file.endswith(".txt"):
-                    dependencies.extend(self._extract_requirements_deps(req_path))
+                    dependencies.extend(
+                        self._extract_requirements_deps(req_path)
+                    )
 
         # Node.js dependencies
         package_json_path = self.config.repo_path / "package.json"
@@ -278,7 +288,10 @@ class ContentAnalyzer:
             with open(pyproject_path, "rb") as f:
                 data = tomllib.load(f)
                 deps = data.get("project", {}).get("dependencies", [])
-                return [dep.split(">=")[0].split("==")[0].split("~=")[0] for dep in deps]
+                return [
+                    dep.split(">=")[0].split("==")[0].split("~=")[0]
+                    for dep in deps
+                ]
         except Exception:
             return []
 
@@ -309,7 +322,9 @@ class ContentAnalyzer:
         except Exception:
             return []
 
-    def _extract_key_features(self, readme_content: str, docs_content: Dict[str, str]) -> List[str]:
+    def _extract_key_features(
+        self, readme_content: str, docs_content: Dict[str, str]
+    ) -> List[str]:
         """Extract key features from documentation."""
         features = []
 
@@ -321,7 +336,9 @@ class ContentAnalyzer:
         ]
 
         for pattern in feature_patterns:
-            match = re.search(pattern, readme_content, re.DOTALL | re.IGNORECASE)
+            match = re.search(
+                pattern, readme_content, re.DOTALL | re.IGNORECASE
+            )
             if match:
                 feature_text = match.group(1)
                 # Extract bullet points
@@ -342,7 +359,9 @@ class ContentAnalyzer:
         ]
 
         for pattern in quick_start_patterns:
-            match = re.search(pattern, readme_content, re.DOTALL | re.IGNORECASE)
+            match = re.search(
+                pattern, readme_content, re.DOTALL | re.IGNORECASE
+            )
             if match:
                 return match.group(1).strip()
 
@@ -369,12 +388,22 @@ class ContentAnalyzer:
             "api.yaml",
         ]
 
-        return any((self.config.repo_path / api_file).exists() for api_file in api_files)
+        return any(
+            (self.config.repo_path / api_file).exists()
+            for api_file in api_files
+        )
 
     def _has_docker(self) -> bool:
         """Check if project uses Docker."""
-        docker_files = ["Dockerfile", "docker-compose.yml", "docker-compose.yaml"]
-        return any((self.config.repo_path / docker_file).exists() for docker_file in docker_files)
+        docker_files = [
+            "Dockerfile",
+            "docker-compose.yml",
+            "docker-compose.yaml",
+        ]
+        return any(
+            (self.config.repo_path / docker_file).exists()
+            for docker_file in docker_files
+        )
 
     def _has_tests(self) -> bool:
         """Check if project has tests."""
@@ -404,7 +433,9 @@ class ContentAnalyzer:
             ".circleci/config.yml",
         ]
 
-        return any((self.config.repo_path / ci_path).exists() for ci_path in ci_paths)
+        return any(
+            (self.config.repo_path / ci_path).exists() for ci_path in ci_paths
+        )
 
     def _should_ignore_file(self, file_path: Path) -> bool:
         """Check if file should be ignored."""
@@ -412,7 +443,9 @@ class ContentAnalyzer:
         from pathspec.patterns import GitWildMatchPattern
 
         spec = PathSpec.from_lines(GitWildMatchPattern, self.ignore_patterns)
-        return spec.match_file(str(file_path.relative_to(self.config.repo_path)))
+        return spec.match_file(
+            str(file_path.relative_to(self.config.repo_path))
+        )
 
     def _get_analyzed_files(self) -> List[Path]:
         """Get list of all analyzed files."""
@@ -427,7 +460,9 @@ class ContentAnalyzer:
         # Add docs files
         if self.config.docs_path.exists():
             for doc_file in self.config.docs_path.rglob("*"):
-                if doc_file.is_file() and not self._should_ignore_file(doc_file):
+                if doc_file.is_file() and not self._should_ignore_file(
+                    doc_file
+                ):
                     files.append(doc_file)
 
         return files

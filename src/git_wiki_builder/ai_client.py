@@ -75,7 +75,9 @@ class AIClient:
                     api_key=os.getenv("GITHUB_TOKEN"),
                 )
             except ImportError:
-                raise ImportError("OpenAI package not installed. Run: pip install openai")
+                raise ImportError(
+                    "OpenAI package not installed. Run: pip install openai"
+                )
 
         elif self.config.ai_provider == "openai":
             try:
@@ -83,15 +85,22 @@ class AIClient:
 
                 return openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
             except ImportError:
-                raise ImportError("OpenAI package not installed. Run: pip install openai")
+                raise ImportError(
+                    "OpenAI package not installed. Run: pip install openai"
+                )
 
         elif self.config.ai_provider == "anthropic":
             if anthropic is None:
-                raise ImportError("Anthropic package not installed. Run: pip install anthropic")
+                raise ImportError(
+                    "Anthropic package not installed. Run: pip install "
+                    "anthropic"
+                )
             return anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
         else:
-            raise ValueError(f"Unsupported AI provider: {self.config.ai_provider}")
+            raise ValueError(
+                f"Unsupported AI provider: {self.config.ai_provider}"
+            )
 
     def generate_content(self, prompt: str, context: Dict[str, Any]) -> str:
         """Generate content using AI.
@@ -106,14 +115,19 @@ class AIClient:
         # Format prompt with context
         formatted_prompt = self._format_prompt(prompt, context)
 
-        logger.debug(f"Generating content with {self.config.ai_provider} ({self.config.ai_model})")
+        logger.debug(
+            f"Generating content with {self.config.ai_provider} "
+            f"({self.config.ai_model})"
+        )
 
         if self.config.ai_provider in ["github", "openai"]:
             return self._generate_openai_content(formatted_prompt)
         elif self.config.ai_provider == "anthropic":
             return self._generate_anthropic_content(formatted_prompt)
         else:
-            raise ValueError(f"Unsupported AI provider: {self.config.ai_provider}")
+            raise ValueError(
+                f"Unsupported AI provider: {self.config.ai_provider}"
+            )
 
     def _format_prompt(self, prompt: str, context: Dict[str, Any]) -> str:
         """Format prompt with context variables.
@@ -148,9 +162,12 @@ class AIClient:
                     {
                         "role": "system",
                         "content": (
-                            "You are a technical documentation expert. Generate high-quality, "
-                            "well-structured markdown documentation that follows best practices. "
-                            "Ensure proper heading hierarchy, clear formatting, and comprehensive "
+                            "You are a technical documentation expert. "
+                            "Generate high-quality, "
+                            "well-structured markdown documentation that "
+                            "follows best practices. "
+                            "Ensure proper heading hierarchy, clear "
+                            "formatting, and comprehensive "
                             "coverage of the requested topic."
                         ),
                     },
@@ -185,9 +202,12 @@ class AIClient:
                 max_tokens=4000,
                 temperature=0.3,
                 system=(
-                    "You are a technical documentation expert. Generate high-quality, "
-                    "well-structured markdown documentation that follows best practices. "
-                    "Ensure proper heading hierarchy, clear formatting, and comprehensive "
+                    "You are a technical documentation expert. "
+                    "Generate high-quality, "
+                    "well-structured markdown documentation that "
+                    "follows best practices. "
+                    "Ensure proper heading hierarchy, clear "
+                    "formatting, and comprehensive "
                     "coverage of the requested topic."
                 ),
                 messages=[{"role": "user", "content": prompt}],

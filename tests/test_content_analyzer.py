@@ -14,7 +14,9 @@ class TestContentAnalyzer:
         """Test project name extraction."""
         with tempfile.TemporaryDirectory() as temp_dir:
             repo_path = Path(temp_dir)
-            (repo_path / "README.md").write_text("# Test Project\nA test project")
+            (repo_path / "README.md").write_text(
+                "# Test Project\nA test project"
+            )
 
             # Test with pyproject.toml
             pyproject_content = """
@@ -50,7 +52,9 @@ This is a comprehensive description of my project.
             analyzer = ContentAnalyzer(config)
 
             description = analyzer._extract_description(readme_content)
-            assert description == "This is a comprehensive description of my project."
+            assert description == (
+                "This is a comprehensive description of my project."
+            )
 
     def test_docs_analysis(self) -> None:
         """Test documentation analysis."""
@@ -62,8 +66,12 @@ This is a comprehensive description of my project.
             docs_path = repo_path / "docs"
             docs_path.mkdir()
 
-            (docs_path / "guide.md").write_text("# User Guide\nThis is the user guide.")
-            (docs_path / "api.md").write_text("# API Reference\nAPI documentation.")
+            (docs_path / "guide.md").write_text(
+                "# User Guide\nThis is the user guide."
+            )
+            (docs_path / "api.md").write_text(
+                "# API Reference\nAPI documentation."
+            )
 
             config = Config(repo_path=repo_path)
             analyzer = ContentAnalyzer(config)
@@ -148,8 +156,12 @@ pip install my-project
             features = analyzer._extract_key_features(readme_content, {})
 
             assert len(features) > 0
-            assert any("command line" in feature.lower() for feature in features)
-            assert any("ai providers" in feature.lower() for feature in features)
+            assert any(
+                "command line" in feature.lower() for feature in features
+            )
+            assert any(
+                "ai providers" in feature.lower() for feature in features
+            )
 
     def test_project_characteristics_detection(self) -> None:
         """Test detection of project characteristics."""
@@ -211,7 +223,8 @@ A comprehensive test project for analysis.
 
             analysis = analyzer.analyze()
 
-            assert analysis.project_name == "git-wiki-builder"  # Directory name
+            # Directory name
+            assert analysis.project_name == "git-wiki-builder"
             assert "comprehensive test project" in analysis.description.lower()
             assert analysis.readme_content == readme_content
             assert len(analysis.docs_content) > 0

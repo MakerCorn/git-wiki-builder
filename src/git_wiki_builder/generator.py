@@ -23,10 +23,14 @@ class WikiGenerator:
             mock_mode: Use mock AI client for testing
         """
         self.config = config
-        self.ai_client = MockAIClient(config) if mock_mode else AIClient(config)
+        self.ai_client = (
+            MockAIClient(config) if mock_mode else AIClient(config)
+        )
         self.content_analyzer = ContentAnalyzer(config)
         self.prompt_manager = PromptManager(config)
-        self.validator = MarkdownValidator(config) if not config.skip_validation else None
+        self.validator = (
+            MarkdownValidator(config) if not config.skip_validation else None
+        )
 
     def generate(self) -> Dict[str, str]:
         """Generate wiki content.
@@ -49,14 +53,19 @@ class WikiGenerator:
         for section_name, pages in wiki_structure.items():
             for page_name in pages:
                 logger.info(f"Generating content for {page_name}")
-                content = self._generate_page_content(page_name, section_name, project_analysis)
+                content = self._generate_page_content(
+                    page_name, section_name, project_analysis
+                )
 
                 # Validate content if validation is enabled
                 if self.validator:
-                    validation_result = self.validator.validate_content(content)
+                    validation_result = self.validator.validate_content(
+                        content
+                    )
                     if not validation_result.is_valid:
                         logger.warning(
-                            f"Validation issues for {page_name}: {validation_result.errors}"
+                            f"Validation issues for {page_name}: "
+                            f"{validation_result.errors}"
                         )
                         # Fix common issues automatically
                         content = self.validator.fix_content(content)
@@ -64,7 +73,9 @@ class WikiGenerator:
                 wiki_content[page_name] = content
 
         # Generate Home page
-        home_content = self._generate_home_page(project_analysis, wiki_structure)
+        home_content = self._generate_home_page(
+            project_analysis, wiki_structure
+        )
         if self.validator:
             validation_result = self.validator.validate_content(home_content)
             if not validation_result.is_valid:
@@ -75,7 +86,9 @@ class WikiGenerator:
         logger.info(f"Generated {len(wiki_content)} wiki pages")
         return wiki_content
 
-    def _generate_wiki_structure(self, project_analysis: Any) -> Dict[str, List[str]]:
+    def _generate_wiki_structure(
+        self, project_analysis: Any
+    ) -> Dict[str, List[str]]:
         """Generate wiki structure based on project analysis.
 
         Args:
@@ -89,16 +102,22 @@ class WikiGenerator:
 
         # Customize based on project content
         if project_analysis.has_api_docs:
-            structure["API Reference"].extend(["sdk_reference", "code_examples"])
+            structure["API Reference"].extend(
+                ["sdk_reference", "code_examples"]
+            )
 
         if project_analysis.has_docker:
-            structure["Deployment"].extend(["docker_deployment", "container_management"])
+            structure["Deployment"].extend(
+                ["docker_deployment", "container_management"]
+            )
 
         if project_analysis.has_tests:
             structure["Development"].extend(["running_tests", "test_coverage"])
 
         if project_analysis.has_ci_cd:
-            structure["Development"].extend(["ci_cd_pipeline", "automated_deployment"])
+            structure["Development"].extend(
+                ["ci_cd_pipeline", "automated_deployment"]
+            )
 
         # Remove empty sections
         structure = {k: v for k, v in structure.items() if v}
