@@ -27,7 +27,9 @@ class WikiGenerator:
         self.ai_client = MockAIClient(config) if mock_mode else AIClient(config)
         self.content_analyzer = ContentAnalyzer(config)
         self.prompt_manager = PromptManager(config)
-        self.validator = MarkdownValidator(config) if not config.skip_validation else None
+        self.validator = (
+            MarkdownValidator(config) if not config.skip_validation else None
+        )
 
     def generate(self) -> Dict[str, str]:
         """Generate wiki content.
@@ -50,7 +52,9 @@ class WikiGenerator:
         for section_name, pages in wiki_structure.items():
             for page_name in pages:
                 logger.info(f"Generating content for {page_name}")
-                content = self._generate_page_content(page_name, section_name, project_analysis)
+                content = self._generate_page_content(
+                    page_name, section_name, project_analysis
+                )
 
                 # Validate content if validation is enabled
                 if self.validator:
@@ -93,7 +97,9 @@ class WikiGenerator:
             structure["API Reference"].extend(["sdk_reference", "code_examples"])
 
         if project_analysis.has_docker:
-            structure["Deployment"].extend(["docker_deployment", "container_management"])
+            structure["Deployment"].extend(
+                ["docker_deployment", "container_management"]
+            )
 
         if project_analysis.has_tests:
             structure["Development"].extend(["running_tests", "test_coverage"])

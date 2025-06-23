@@ -59,7 +59,8 @@ class TestConfig:
             (repo_path / "README.md").write_text("# Test Project\nA test project")
 
             with patch.dict(
-                os.environ, {"GITHUB_TOKEN": "test-token", "GITHUB_REPOSITORY": "owner/repo"}
+                os.environ,
+                {"GITHUB_TOKEN": "test-token", "GITHUB_REPOSITORY": "owner/repo"},
             ):
                 config = Config(
                     repo_path=repo_path,

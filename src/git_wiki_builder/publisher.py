@@ -66,11 +66,15 @@ class WikiPublisher:
         response = requests.get(url, headers=headers)
 
         if response.status_code == 404:
-            raise ValueError(f"Repository {self.config.github_repo} not found or no access")
+            raise ValueError(
+                f"Repository {self.config.github_repo} not found or no access"
+            )
         elif response.status_code == 401:
             raise ValueError("Invalid GitHub token")
         elif response.status_code != 200:
-            raise ValueError(f"GitHub API error: {response.status_code} - {response.text}")
+            raise ValueError(
+                f"GitHub API error: {response.status_code} - {response.text}"
+            )
 
         repo_data = response.json()
         if not repo_data.get("has_wiki", True):
@@ -85,9 +89,7 @@ class WikiPublisher:
         Returns:
             GitPython Repo object
         """
-        wiki_url = (
-            f"https://{self.config.github_token}@github.com/{self.config.github_repo}.wiki.git"
-        )
+        wiki_url = f"https://{self.config.github_token}@github.com/{self.config.github_repo}.wiki.git"
 
         try:
             # Try to clone existing wiki
@@ -124,7 +126,9 @@ class WikiPublisher:
 
             if response.status_code == 200:
                 user_data = response.json()
-                name = user_data.get("name") or user_data.get("login", "Git Wiki Builder")
+                name = user_data.get("name") or user_data.get(
+                    "login", "Git Wiki Builder"
+                )
                 email = (
                     user_data.get("email")
                     or f"{user_data.get('login', 'git-wiki-builder')}@users.noreply.github.com"
@@ -145,9 +149,13 @@ class WikiPublisher:
             # Use default values
             with repo.config_writer() as git_config:
                 git_config.set_value("user", "name", "Git Wiki Builder")
-                git_config.set_value("user", "email", "git-wiki-builder@users.noreply.github.com")
+                git_config.set_value(
+                    "user", "email", "git-wiki-builder@users.noreply.github.com"
+                )
 
-    def _update_wiki_pages(self, wiki_repo_path: Path, wiki_content: Dict[str, str]) -> None:
+    def _update_wiki_pages(
+        self, wiki_repo_path: Path, wiki_content: Dict[str, str]
+    ) -> None:
         """Update wiki pages with new content.
 
         Args:
@@ -183,7 +191,9 @@ class WikiPublisher:
 
         return filename
 
-    def _commit_and_push_changes(self, repo: git.Repo, wiki_content: Dict[str, str]) -> None:
+    def _commit_and_push_changes(
+        self, repo: git.Repo, wiki_content: Dict[str, str]
+    ) -> None:
         """Commit and push changes to the wiki repository.
 
         Args:

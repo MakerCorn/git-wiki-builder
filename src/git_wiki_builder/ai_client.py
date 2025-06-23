@@ -4,6 +4,11 @@ import logging
 import os
 from typing import Any, Dict
 
+try:
+    import anthropic  # type: ignore[import-not-found]
+except ImportError:
+    anthropic = None
+
 from .config import Config
 
 logger = logging.getLogger(__name__)
@@ -11,16 +16,16 @@ logger = logging.getLogger(__name__)
 
 class MockAIClient:
     """Mock AI client for testing and dry runs."""
-    
+
     def __init__(self, config: Config) -> None:
         """Initialize mock AI client."""
         self.config = config
-    
+
     def generate_content(self, prompt: str, context: Dict[str, Any]) -> str:
         """Generate mock content."""
         page_name = context.get("page_name", "Unknown Page")
         project_name = context.get("project_name", "Unknown Project")
-        
+
         return f"""# {page_name}
 
 This is mock content generated for the {page_name} page of {project_name}.
@@ -66,26 +71,29 @@ class AIClient:
 
                 return openai.OpenAI(
                     base_url="https://models.inference.ai.azure.com",
-                    api_key=os.getenv("GITHUB_TOKEN")
+                    api_key=os.getenv("GITHUB_TOKEN"),
                 )
             except ImportError:
-                raise ImportError("OpenAI package not installed. Run: pip install openai")
-        
+                raise ImportError(
+                    "OpenAI package not installed. Run: pip install openai"
+                )
+
         elif self.config.ai_provider == "openai":
             try:
                 import openai
 
                 return openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
             except ImportError:
-                raise ImportError("OpenAI package not installed. Run: pip install openai")
+                raise ImportError(
+                    "OpenAI package not installed. Run: pip install openai"
+                )
 
         elif self.config.ai_provider == "anthropic":
-            try:
-                import anthropic
-
-                return anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-            except ImportError:
-                raise ImportError("Anthropic package not installed. Run: pip install anthropic")
+            if anthropic is None:
+                raise ImportError(
+                    "Anthropic package not installed. Run: pip install anthropic"
+                )
+            return anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
         else:
             raise ValueError(f"Unsupported AI provider: {self.config.ai_provider}")
@@ -103,7 +111,9 @@ class AIClient:
         # Format prompt with context
         formatted_prompt = self._format_prompt(prompt, context)
 
-        logger.debug(f"Generating content with {self.config.ai_provider} ({self.config.ai_model})")
+        logger.debug(
+            f"Generating content with {self.config.ai_provider} ({self.config.ai_model})"
+        )
 
         if self.config.ai_provider in ["github", "openai"]:
             return self._generate_openai_content(formatted_prompt)
@@ -161,7 +171,7 @@ class AIClient:
             if not content:
                 raise ValueError("Empty response from OpenAI")
 
-            return content.strip()
+            return str(content).strip()
 
         except Exception as e:
             logger.error(f"OpenAI API error: {e}")
@@ -194,7 +204,7 @@ class AIClient:
             if not content:
                 raise ValueError("Empty response from Anthropic")
 
-            return content.strip()
+            return str(content).strip()
 
         except Exception as e:
             logger.error(f"Anthropic API error: {e}")

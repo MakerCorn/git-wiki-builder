@@ -116,13 +116,19 @@ class Config:
         """Validate configuration for content generation (requires API keys)."""
         # Check for required API keys
         if self.ai_provider == "github" and not os.getenv("GITHUB_TOKEN"):
-            raise ValueError("GITHUB_TOKEN environment variable is required for GitHub Models")
-        
+            raise ValueError(
+                "GITHUB_TOKEN environment variable is required for GitHub Models"
+            )
+
         if self.ai_provider == "openai" and not os.getenv("OPENAI_API_KEY"):
-            raise ValueError("OPENAI_API_KEY environment variable is required for OpenAI")
+            raise ValueError(
+                "OPENAI_API_KEY environment variable is required for OpenAI"
+            )
 
         if self.ai_provider == "anthropic" and not os.getenv("ANTHROPIC_API_KEY"):
-            raise ValueError("ANTHROPIC_API_KEY environment variable is required for Anthropic")
+            raise ValueError(
+                "ANTHROPIC_API_KEY environment variable is required for Anthropic"
+            )
 
     @property
     def docs_path(self) -> Path:
@@ -169,7 +175,7 @@ class Config:
         Returns:
             Config instance
         """
-        custom_config = {}
+        custom_config: Dict[str, Any] = {}
 
         # Load from config file
         if config_file and config_file.exists():
@@ -177,7 +183,9 @@ class Config:
                 if config_file.suffix.lower() in [".yml", ".yaml"]:
                     custom_config = yaml.safe_load(f) or {}
                 else:
-                    raise ValueError(f"Unsupported config file format: {config_file.suffix}")
+                    raise ValueError(
+                        f"Unsupported config file format: {config_file.suffix}"
+                    )
 
         # Look for default config file
         elif not config_file:

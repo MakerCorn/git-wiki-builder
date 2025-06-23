@@ -4,7 +4,15 @@ import logging
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
+
+try:
+    import tomllib  # type: ignore[import-not-found]
+except ImportError:
+    try:
+        import tomli as tomllib
+    except ImportError:
+        tomllib = None
 
 import yaml
 
@@ -116,26 +124,12 @@ class ContentAnalyzer:
         """Extract project name from various sources."""
         # Try pyproject.toml
         pyproject_path = self.config.repo_path / "pyproject.toml"
-        if pyproject_path.exists():
+        if pyproject_path.exists() and tomllib is not None:
             try:
-                try:
-                    import tomllib
-                except ImportError:
-                    # Fallback for Python < 3.11
-                    try:
-                        import tomli as tomllib
-                    except ImportError:
-                        pass
-                    else:
-                        with open(pyproject_path, "rb") as f:
-                            data = tomllib.load(f)
-                            if "project" in data and "name" in data["project"]:
-                                return data["project"]["name"]
-                else:
-                    with open(pyproject_path, "rb") as f:
-                        data = tomllib.load(f)
-                        if "project" in data and "name" in data["project"]:
-                            return data["project"]["name"]
+                with open(pyproject_path, "rb") as f:
+                    data = tomllib.load(f)
+                    if "project" in data and "name" in data["project"]:
+                        return str(data["project"]["name"])
             except Exception:
                 # Fallback for Python < 3.11 or other errors
                 pass
@@ -149,12 +143,12 @@ class ContentAnalyzer:
                 with open(package_json_path, "r", encoding="utf-8") as f:
                     data = json.load(f)
                     if "name" in data:
-                        return data["name"]
+                        return str(data["name"])
             except (json.JSONDecodeError, KeyError):
                 pass
 
         # Use directory name as fallback
-        return self.config.repo_path.name
+        return str(self.config.repo_path.name)
 
     def _read_readme(self) -> str:
         """Read README content."""
@@ -188,7 +182,7 @@ class ContentAnalyzer:
 
     def _analyze_docs(self) -> Dict[str, str]:
         """Analyze documentation files."""
-        docs_content = {}
+        docs_content: Dict[str, str] = {}
 
         if not self.config.docs_path.exists():
             return docs_content
@@ -215,7 +209,9 @@ class ContentAnalyzer:
 
         for source_dir in source_dirs:
             source_path = (
-                self.config.repo_path / source_dir if source_dir else self.config.repo_path
+                self.config.repo_path / source_dir
+                if source_dir
+                else self.config.repo_path
             )
             if not source_path.exists():
                 continue
@@ -285,7 +281,9 @@ class ContentAnalyzer:
             with open(pyproject_path, "rb") as f:
                 data = tomllib.load(f)
                 deps = data.get("project", {}).get("dependencies", [])
-                return [dep.split(">=")[0].split("==")[0].split("~=")[0] for dep in deps]
+                return [
+                    dep.split(">=")[0].split("==")[0].split("~=")[0] for dep in deps
+                ]
         except Exception:
             return []
 
@@ -316,7 +314,9 @@ class ContentAnalyzer:
         except Exception:
             return []
 
-    def _extract_key_features(self, readme_content: str, docs_content: Dict[str, str]) -> List[str]:
+    def _extract_key_features(
+        self, readme_content: str, docs_content: Dict[str, str]
+    ) -> List[str]:
         """Extract key features from documentation."""
         features = []
 
@@ -376,12 +376,17 @@ class ContentAnalyzer:
             "api.yaml",
         ]
 
-        return any((self.config.repo_path / api_file).exists() for api_file in api_files)
+        return any(
+            (self.config.repo_path / api_file).exists() for api_file in api_files
+        )
 
     def _has_docker(self) -> bool:
         """Check if project uses Docker."""
         docker_files = ["Dockerfile", "docker-compose.yml", "docker-compose.yaml"]
-        return any((self.config.repo_path / docker_file).exists() for docker_file in docker_files)
+        return any(
+            (self.config.repo_path / docker_file).exists()
+            for docker_file in docker_files
+        )
 
     def _has_tests(self) -> bool:
         """Check if project has tests."""

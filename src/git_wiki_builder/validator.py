@@ -132,7 +132,9 @@ class MarkdownValidator:
                     h1_count += 1
 
                 if level > prev_level + 1:
-                    errors.append(f"MD001: Heading level increment too large (#{level})")
+                    errors.append(
+                        f"MD001: Heading level increment too large (#{level})"
+                    )
 
                 prev_level = level
 
@@ -155,7 +157,9 @@ class MarkdownValidator:
                 # Check for space after hash (MD018)
                 hash_part = line.lstrip().split()[0]
                 if not re.match(r"^#+\s", line.lstrip()):
-                    errors.append(f"MD018: Line {i}: No space after hash on atx style heading")
+                    errors.append(
+                        f"MD018: Line {i}: No space after hash on atx style heading"
+                    )
 
                 # Check for multiple spaces after hash (MD019)
                 if re.match(r"^#+\s{2,}", line.lstrip()):
@@ -177,20 +181,27 @@ class MarkdownValidator:
             stripped = line.strip()
 
             # Check for list items
-            if re.match(r"^[\s]*[-*+]\s", line):
+            list_match = re.match(r"^[\s]*[-*+]\s", line)
+            if list_match:
                 in_list = True
-                marker = re.match(r"^[\s]*([-*+])", line).group(1)
-                list_markers.add(marker)
+                marker_match = re.match(r"^[\s]*([-*+])", line)
+                if marker_match:
+                    marker = marker_match.group(1)
+                    list_markers.add(marker)
 
                 # Check indentation (MD007)
                 indent = len(line) - len(line.lstrip())
                 if indent % 2 != 0:
-                    issues.append(f"MD007: Line {i}: List indentation should be 2 spaces")
+                    issues.append(
+                        f"MD007: Line {i}: List indentation should be 2 spaces"
+                    )
 
             elif in_list and not stripped:
                 # End of list, check for blank lines around lists (MD032)
                 if i < len(lines) and lines[i].strip():
-                    issues.append(f"MD032: Line {i}: Lists should be surrounded by blank lines")
+                    issues.append(
+                        f"MD032: Line {i}: Lists should be surrounded by blank lines"
+                    )
                 in_list = False
 
         # Check for consistent list markers (MD004)
@@ -267,7 +278,9 @@ class MarkdownValidator:
 
         for i, line in enumerate(lines, 1):
             # Check for trailing spaces (MD009)
-            if line.endswith(" ") and not line.endswith("  "):  # Allow 2+ spaces for line breaks
+            if line.endswith(" ") and not line.endswith(
+                "  "
+            ):  # Allow 2+ spaces for line breaks
                 issues.append(f"MD009: Line {i}: Trailing spaces")
 
             # Check for tabs (MD010)
@@ -287,7 +300,7 @@ class MarkdownValidator:
     def _fix_heading_spacing(self, content: str) -> str:
         """Fix heading spacing issues (MD022)."""
         lines = content.split("\n")
-        fixed_lines = []
+        fixed_lines: List[str] = []
 
         for i, line in enumerate(lines):
             if line.strip().startswith("#"):
@@ -410,20 +423,27 @@ class MarkdownValidator:
         context = " ".join(context_lines).lower()
 
         # Simple heuristics for language detection
-        if any(keyword in context for keyword in ["python", "pip", "import", "def ", "class "]):
+        if any(
+            keyword in context
+            for keyword in ["python", "pip", "import", "def ", "class "]
+        ):
             return "python"
         elif any(
             keyword in context
             for keyword in ["javascript", "js", "npm", "function", "const ", "let "]
         ):
             return "javascript"
-        elif any(keyword in context for keyword in ["bash", "shell", "command", "$", "sudo"]):
+        elif any(
+            keyword in context for keyword in ["bash", "shell", "command", "$", "sudo"]
+        ):
             return "bash"
         elif any(keyword in context for keyword in ["json", "api", "response"]):
             return "json"
         elif any(keyword in context for keyword in ["yaml", "yml", "config"]):
             return "yaml"
-        elif any(keyword in context for keyword in ["sql", "database", "select", "insert"]):
+        elif any(
+            keyword in context for keyword in ["sql", "database", "select", "insert"]
+        ):
             return "sql"
         elif any(keyword in context for keyword in ["html", "web", "<", ">"]):
             return "html"
