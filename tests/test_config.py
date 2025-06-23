@@ -27,8 +27,8 @@ class TestConfig:
             config = Config(repo_path=repo_path)
 
             assert config.repo_path == repo_path.resolve()
-            assert config.ai_provider == "openai"
-            assert config.ai_model == "gpt-4"
+            assert config.ai_provider == "github"
+            assert config.ai_model == "gpt-4o-mini"
             assert not config.skip_validation
 
     def test_custom_config_from_file(self) -> None:

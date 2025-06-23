@@ -223,8 +223,8 @@ A comprehensive test project for analysis.
 
             analysis = analyzer.analyze()
 
-            # Directory name
-            assert analysis.project_name == "git-wiki-builder"
+            # Directory name should match temp directory name
+            assert analysis.project_name == repo_path.name
             assert "comprehensive test project" in analysis.description.lower()
             assert analysis.readme_content == readme_content
             assert len(analysis.docs_content) > 0
