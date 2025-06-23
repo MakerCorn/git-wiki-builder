@@ -1,15 +1,15 @@
 name: Generate Wiki Documentation
 
 on:
-  push:
-    branches: [main, master]
-    paths: 
-      - 'README.md'
-      - 'docs/**'
-      - 'src/**'
-      - 'lib/**'
-      - 'app/**'
-      - '*.md'
+  #push:
+  #  branches: [main, master]
+  #  paths: 
+  #    - 'README.md'
+  #    - 'docs/**'
+  #    - 'src/**'
+  #    - 'lib/**'
+  #    - 'app/**'
+  #    - '*.md'
   workflow_dispatch:
 
 permissions:

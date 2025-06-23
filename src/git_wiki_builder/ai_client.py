@@ -74,9 +74,7 @@ class AIClient:
                     api_key=os.getenv("GITHUB_TOKEN"),
                 )
             except ImportError:
-                raise ImportError(
-                    "OpenAI package not installed. Run: pip install openai"
-                )
+                raise ImportError("OpenAI package not installed. Run: pip install openai")
 
         elif self.config.ai_provider == "openai":
             try:
@@ -84,15 +82,11 @@ class AIClient:
 
                 return openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
             except ImportError:
-                raise ImportError(
-                    "OpenAI package not installed. Run: pip install openai"
-                )
+                raise ImportError("OpenAI package not installed. Run: pip install openai")
 
         elif self.config.ai_provider == "anthropic":
             if anthropic is None:
-                raise ImportError(
-                    "Anthropic package not installed. Run: pip install anthropic"
-                )
+                raise ImportError("Anthropic package not installed. Run: pip install anthropic")
             return anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
         else:
@@ -111,9 +105,7 @@ class AIClient:
         # Format prompt with context
         formatted_prompt = self._format_prompt(prompt, context)
 
-        logger.debug(
-            f"Generating content with {self.config.ai_provider} ({self.config.ai_model})"
-        )
+        logger.debug(f"Generating content with {self.config.ai_provider} ({self.config.ai_model})")
 
         if self.config.ai_provider in ["github", "openai"]:
             return self._generate_openai_content(formatted_prompt)

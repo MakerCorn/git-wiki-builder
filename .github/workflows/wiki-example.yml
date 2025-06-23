@@ -1,9 +1,9 @@
 name: Update Wiki
 
 on:
-  push:
-    branches: [main]
-    paths: ['README.md', 'docs/**', 'src/**']
+  #push:
+  #  branches: [main]
+  #  paths: ['README.md', 'docs/**', 'src/**']
   workflow_dispatch:
 
 jobs:

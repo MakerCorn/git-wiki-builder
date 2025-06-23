@@ -125,9 +125,7 @@ def main(
         console.print(f"AI Model: {config.ai_model}")
 
         if dry_run:
-            console.print(
-                "[yellow]Running in dry-run mode - no publishing will occur[/yellow]"
-            )
+            console.print("[yellow]Running in dry-run mode - no publishing will occur[/yellow]")
 
         # Generate wiki content
         with Progress(
@@ -158,9 +156,7 @@ def main(
                 console.print(
                     "[red]Error: GitHub token and repository are required for publishing[/red]"
                 )
-                console.print(
-                    "Set GITHUB_TOKEN and GITHUB_REPOSITORY environment variables"
-                )
+                console.print("Set GITHUB_TOKEN and GITHUB_REPOSITORY environment variables")
                 sys.exit(1)
 
             with Progress(
@@ -173,9 +169,7 @@ def main(
                 publisher = WikiPublisher(config)
                 publisher.publish(wiki_content)
 
-                progress.update(
-                    task, description="Published to GitHub Wiki successfully"
-                )
+                progress.update(task, description="Published to GitHub Wiki successfully")
 
             console.print("[green]Wiki published successfully![/green]")
             console.print(f"View at: https://github.com/{config.github_repo}/wiki")

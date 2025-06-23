@@ -167,9 +167,7 @@ Multiple blank lines above.
             lines = fixed_content.split("\n")
             for line in lines:
                 if line.strip():  # Non-empty lines
-                    assert not line.endswith(" ") or line.endswith(
-                        "  "
-                    )  # Allow line breaks
+                    assert not line.endswith(" ") or line.endswith("  ")  # Allow line breaks
 
             # Check that multiple blank lines are reduced
             assert "\n\n\n" not in fixed_content

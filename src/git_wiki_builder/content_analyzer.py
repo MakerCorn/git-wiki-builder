@@ -209,9 +209,7 @@ class ContentAnalyzer:
 
         for source_dir in source_dirs:
             source_path = (
-                self.config.repo_path / source_dir
-                if source_dir
-                else self.config.repo_path
+                self.config.repo_path / source_dir if source_dir else self.config.repo_path
             )
             if not source_path.exists():
                 continue
@@ -281,9 +279,7 @@ class ContentAnalyzer:
             with open(pyproject_path, "rb") as f:
                 data = tomllib.load(f)
                 deps = data.get("project", {}).get("dependencies", [])
-                return [
-                    dep.split(">=")[0].split("==")[0].split("~=")[0] for dep in deps
-                ]
+                return [dep.split(">=")[0].split("==")[0].split("~=")[0] for dep in deps]
         except Exception:
             return []
 
@@ -314,9 +310,7 @@ class ContentAnalyzer:
         except Exception:
             return []
 
-    def _extract_key_features(
-        self, readme_content: str, docs_content: Dict[str, str]
-    ) -> List[str]:
+    def _extract_key_features(self, readme_content: str, docs_content: Dict[str, str]) -> List[str]:
         """Extract key features from documentation."""
         features = []
 
@@ -376,17 +370,12 @@ class ContentAnalyzer:
             "api.yaml",
         ]
 
-        return any(
-            (self.config.repo_path / api_file).exists() for api_file in api_files
-        )
+        return any((self.config.repo_path / api_file).exists() for api_file in api_files)
 
     def _has_docker(self) -> bool:
         """Check if project uses Docker."""
         docker_files = ["Dockerfile", "docker-compose.yml", "docker-compose.yaml"]
-        return any(
-            (self.config.repo_path / docker_file).exists()
-            for docker_file in docker_files
-        )
+        return any((self.config.repo_path / docker_file).exists() for docker_file in docker_files)
 
     def _has_tests(self) -> bool:
         """Check if project has tests."""
