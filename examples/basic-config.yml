@@ -1,0 +1,15 @@
+# Basic Git Wiki Builder Configuration Example
+# Save as .git-wiki-builder.yml in your project root
+
+# AI Configuration - Uses GitHub Models (free for public repos)
+ai:
+  provider: "github"     # Options: "github", "openai", "anthropic"
+  model: "gpt-4o-mini"   # GitHub Models: gpt-4o-mini (free)
+
+# Output Configuration
+output:
+  directory: "./wiki-output"  # Local directory to save generated files
+
+# Validation Configuration
+validation:
+  skip: false  # Set to true to skip markdown validation

@@ -1,0 +1,157 @@
+# Default prompts for Git Wiki Builder
+# You can customize these prompts by creating your own prompt file
+
+home: |
+  Create a comprehensive Home page for the {project_name} project wiki.
+
+  Project Information:
+  - Name: {project_name}
+  - Description: {project_description}
+  - README Content: {readme_content}
+
+  Navigation Structure:
+  {navigation}
+
+  Key Features:
+  {key_features}
+
+  Quick Start Information:
+  {quick_start}
+
+  Requirements:
+  1. Start with a clear project title and description
+  2. Include a table of contents linking to all wiki sections
+  3. Provide a brief overview of key features
+  4. Include quick start/getting started information
+  5. Add navigation links to major sections
+  6. Use proper markdown formatting with clear headings
+  7. Make it welcoming and informative for new users
+  8. Include badges or status indicators if relevant
+  9. Add contact/support information if available
+  10. Ensure the content is well-structured and easy to navigate
+
+  Format the response as clean markdown with proper heading hierarchy.
+
+installation: |
+  Create comprehensive installation documentation for {project_name}.
+
+  Project Information:
+  - Name: {project_name}
+  - Description: {project_description}
+  - Dependencies: {dependencies}
+  - README Content: {readme_content}
+  - Documentation: {docs_content}
+
+  Requirements:
+  1. Provide multiple installation methods (pip, conda, source, etc.)
+  2. List system requirements and prerequisites
+  3. Include platform-specific instructions (Windows, macOS, Linux)
+  4. Cover dependency installation
+  5. Provide verification steps
+  6. Include troubleshooting for common installation issues
+  7. Add Docker installation if applicable: {has_docker}
+  8. Use clear step-by-step instructions
+  9. Include code examples and command snippets
+  10. Add links to related documentation
+
+  Format as clean markdown with proper code blocks and clear sections.
+
+configuration: |
+  Create detailed configuration documentation for {project_name}.
+
+  Project Information:
+  - Name: {project_name}
+  - Description: {project_description}
+  - README Content: {readme_content}
+  - Documentation: {docs_content}
+
+  Requirements:
+  1. Explain all configuration options and parameters
+  2. Provide configuration file examples
+  3. Cover environment variable setup
+  4. Include default values and recommended settings
+  5. Explain configuration file locations
+  6. Cover different environments (dev, staging, prod)
+  7. Include security considerations
+  8. Provide validation and testing steps
+  9. Add troubleshooting for configuration issues
+  10. Include links to related sections
+
+  Format as clean markdown with proper code blocks and examples.
+
+api_reference: |
+  Create comprehensive API documentation for {project_name}.
+
+  Project Information:
+  - Name: {project_name}
+  - Description: {project_description}
+  - Has API Documentation: {has_api}
+  - README Content: {readme_content}
+  - Documentation: {docs_content}
+  - Code Structure: {code_structure}
+
+  Requirements:
+  1. Provide API overview and architecture
+  2. Document all endpoints with methods, parameters, and responses
+  3. Include authentication and authorization details
+  4. Provide request/response examples
+  5. Cover error handling and status codes
+  6. Include rate limiting information
+  7. Add SDK/client library information
+  8. Provide interactive examples or curl commands
+  9. Cover versioning and backwards compatibility
+  10. Include links to code examples
+
+  Format as clean markdown with proper code blocks and clear structure.
+
+development: |
+  Create comprehensive development documentation for {project_name}.
+
+  Project Information:
+  - Name: {project_name}
+  - Description: {project_description}
+  - Has Tests: {has_tests}
+  - Has CI/CD: {has_ci_cd}
+  - Code Structure: {code_structure}
+  - Dependencies: {dependencies}
+  - README Content: {readme_content}
+  - Documentation: {docs_content}
+
+  Requirements:
+  1. Explain development environment setup
+  2. Cover coding standards and guidelines
+  3. Document the project structure and architecture
+  4. Include testing procedures: {has_tests}
+  5. Explain CI/CD pipeline: {has_ci_cd}
+  6. Cover contribution guidelines
+  7. Include debugging and troubleshooting tips
+  8. Document build and release processes
+  9. Add code review procedures
+  10. Include links to development tools
+
+  Format as clean markdown with clear sections and code examples.
+
+deployment: |
+  Create comprehensive deployment documentation for {project_name}.
+
+  Project Information:
+  - Name: {project_name}
+  - Description: {project_description}
+  - Has Docker: {has_docker}
+  - Has CI/CD: {has_ci_cd}
+  - README Content: {readme_content}
+  - Documentation: {docs_content}
+
+  Requirements:
+  1. Cover different deployment environments
+  2. Include Docker deployment if applicable: {has_docker}
+  3. Document cloud platform deployment (AWS, GCP, Azure)
+  4. Cover environment configuration
+  5. Include monitoring and logging setup
+  6. Document scaling and performance considerations
+  7. Cover security best practices
+  8. Include backup and disaster recovery
+  9. Document CI/CD deployment: {has_ci_cd}
+  10. Add troubleshooting for deployment issues
+
+  Format as clean markdown with step-by-step instructions.

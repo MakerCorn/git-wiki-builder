@@ -1,0 +1,57 @@
+name: Generate Wiki Documentation
+
+on:
+  push:
+    branches: [main, master]
+    paths: 
+      - 'README.md'
+      - 'docs/**'
+      - 'src/**'
+      - 'lib/**'
+      - 'app/**'
+      - '*.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  generate-wiki:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Git Wiki Builder
+        run: pip install git-wiki-builder
+
+      - name: Generate and publish wiki
+        run: git-wiki-builder
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+
+      - name: Generate wiki preview (for debugging)
+        if: failure()
+        run: git-wiki-builder --dry-run --output-dir ./wiki-debug --verbose
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload debug artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wiki-debug
+          path: wiki-debug/
+          retention-days: 7

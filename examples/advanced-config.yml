@@ -1,0 +1,60 @@
+# Advanced Git Wiki Builder Configuration Example
+# Save as .git-wiki-builder.yml in your project root
+
+# AI Configuration - Using alternative provider
+ai:
+  provider: "openai"  # Using OpenAI instead of default GitHub
+  model: "gpt-4"      # Premium model
+
+# GitHub Configuration (optional - can use env vars)
+github:
+  # token: "your-github-token"      # Use GITHUB_TOKEN env var instead
+  # repository: "owner/repo-name"   # Use GITHUB_REPOSITORY env var instead
+
+# Output Configuration
+output:
+  directory: "./generated-wiki"
+
+# Custom Prompts
+prompt:
+  file: "./my-custom-prompts.yml"
+
+# Validation Configuration
+validation:
+  skip: false
+
+# Custom Wiki Structure
+wiki_structure:
+  "Home": ["overview", "quick_start", "features"]
+  "Getting Started": ["installation", "configuration", "first_steps"]
+  "User Guide": ["basic_usage", "advanced_features", "examples"]
+  "API Documentation": ["api_overview", "endpoints", "authentication", "sdk"]
+  "Development": ["contributing", "development_setup", "testing", "architecture"]
+  "Deployment": ["deployment_guide", "docker", "cloud_platforms", "monitoring"]
+  "Support": ["faq", "troubleshooting", "known_issues"]
+  "Changelog": ["release_notes", "migration_guide", "breaking_changes"]
+
+# File Processing Configuration
+processing:
+  ignore_patterns:
+    - "*.pyc"
+    - "__pycache__"
+    - ".git"
+    - "node_modules"
+    - ".env"
+    - "*.log"
+    - ".DS_Store"
+    - "*.tmp"
+    - "*.temp"
+    - "build/"
+    - "dist/"
+
+# Content Analysis Configuration
+analysis:
+  max_files_per_category: 15
+  max_content_length: 75000
+  features:
+    extract_dependencies: true
+    analyze_code_structure: true
+    detect_frameworks: true
+    extract_key_features: true

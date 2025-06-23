@@ -1,0 +1,60 @@
+# Default Git Wiki Builder Configuration
+# This configuration uses GitHub Models (free for public repositories)
+
+# AI Configuration - Uses GitHub Models by default
+ai:
+  provider: "github"     # Uses GitHub's hosted AI models
+  model: "gpt-4o-mini"   # Free model for public repositories
+
+# GitHub Configuration
+# These are automatically set in GitHub Actions
+github:
+  # token: automatically uses GITHUB_TOKEN
+  # repository: automatically uses GITHUB_REPOSITORY
+
+# Output Configuration
+output:
+  directory: "./wiki-output"  # Local output directory for dry runs
+
+# Validation Configuration
+validation:
+  skip: false  # Enable markdown validation and auto-fixing
+
+# Wiki Structure - Standard sections for most projects
+wiki_structure:
+  "Home": ["overview", "quick_start"]
+  "Getting Started": ["installation", "configuration", "first_steps"]
+  "User Guide": ["features", "usage", "examples"]
+  "API Reference": ["api_overview", "endpoints", "authentication"]
+  "Development": ["contributing", "development_setup", "testing"]
+  "Deployment": ["deployment_guide", "environment_setup", "troubleshooting"]
+  "FAQ": ["common_questions", "known_issues"]
+  "Changelog": ["release_notes", "migration_guide"]
+
+# File Processing Configuration
+processing:
+  ignore_patterns:
+    - "*.pyc"
+    - "__pycache__"
+    - ".git"
+    - "node_modules"
+    - ".env"
+    - "*.log"
+    - ".DS_Store"
+    - "*.tmp"
+    - "*.temp"
+    - "build/"
+    - "dist/"
+    - "target/"
+    - ".pytest_cache"
+    - "coverage/"
+
+# Content Analysis Configuration
+analysis:
+  max_files_per_category: 10
+  max_content_length: 50000
+  features:
+    extract_dependencies: true
+    analyze_code_structure: true
+    detect_frameworks: true
+    extract_key_features: true

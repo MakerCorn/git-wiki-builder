@@ -1,0 +1,65 @@
+# Git Wiki Builder Configuration Template
+# Copy this file to your project root as .git-wiki-builder.yml and customize
+
+# AI Configuration
+ai:
+  provider: "openai"  # Options: "openai", "anthropic"
+  model: "gpt-4"      # OpenAI: gpt-4, gpt-3.5-turbo | Anthropic: claude-3-sonnet-20240229
+
+# GitHub Configuration
+github:
+  # token: "your-github-token"      # Can be set via GITHUB_TOKEN env var
+  # repository: "owner/repo-name"   # Can be set via GITHUB_REPOSITORY env var
+
+# Output Configuration
+output:
+  directory: "./wiki-output"  # Local directory to save generated files
+
+# Prompt Configuration
+prompt:
+  file: "./custom-prompts.yml"  # Path to custom prompt file (optional)
+
+# Validation Configuration
+validation:
+  skip: false  # Set to true to skip markdown validation
+
+# Wiki Structure Customization (optional)
+# Uncomment and modify to customize the default wiki structure
+# wiki_structure:
+#   "Home": ["overview", "quick_start"]
+#   "Getting Started": ["installation", "configuration", "first_steps"]
+#   "User Guide": ["features", "usage", "examples"]
+#   "API Reference": ["api_overview", "endpoints", "authentication"]
+#   "Development": ["contributing", "development_setup", "testing"]
+#   "Deployment": ["deployment_guide", "environment_setup", "troubleshooting"]
+#   "FAQ": ["common_questions", "known_issues"]
+#   "Changelog": ["release_notes", "migration_guide"]
+
+# File Processing Configuration
+processing:
+  # Patterns to ignore when analyzing project files
+  ignore_patterns:
+    - "*.pyc"
+    - "__pycache__"
+    - ".git"
+    - "node_modules"
+    - ".env"
+    - "*.log"
+    - ".DS_Store"
+    - "*.tmp"
+    - "*.temp"
+
+# Content Analysis Configuration
+analysis:
+  # Maximum number of files to analyze per category
+  max_files_per_category: 10
+  
+  # Maximum content length to send to AI (in characters)
+  max_content_length: 50000
+  
+  # Enable/disable specific analysis features
+  features:
+    extract_dependencies: true
+    analyze_code_structure: true
+    detect_frameworks: true
+    extract_key_features: true

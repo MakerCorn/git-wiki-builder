@@ -1,0 +1,43 @@
+name: Update Wiki
+
+on:
+  push:
+    branches: [main]
+    paths: ['README.md', 'docs/**', 'src/**']
+  workflow_dispatch:
+
+jobs:
+  update-wiki:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Git Wiki Builder
+        run: pip install git-wiki-builder
+
+      - name: Generate and publish wiki
+        run: git-wiki-builder --verbose
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+
+      - name: Generate wiki files (dry run for artifacts)
+        run: git-wiki-builder --dry-run --output-dir ./wiki-output
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Upload wiki files as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wiki-files
+          path: wiki-output/
