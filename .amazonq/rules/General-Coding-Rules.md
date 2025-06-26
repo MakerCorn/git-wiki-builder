@@ -27,3 +27,7 @@
 - When fixing code, analyze the root cause rather than just fixing the identified problem. For example, don't just fix parameters to match a parameter list, understand what the code was trying to do and fix the core problem.
 - Remove deprecated classes and tests when refactoring code.
 - Always fix all errors, warnings, and issues. Do not just fix critical or high priority items.
+- Remove deprecated classes and tests when refactoring code.
+- Do not add a blank at the end of the line.
+- Keep lines of code to less than 80 characters.
+- When creating tests, provide 100% coverage whenever possible.
