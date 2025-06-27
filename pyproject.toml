@@ -16,7 +16,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -25,7 +24,7 @@ classifiers = [
     "Topic :: Text Processing :: Markup",
 ]
 keywords = ["github", "wiki", "documentation", "ai", "automation"]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies = [
     "click>=8.0.0",
     "requests>=2.28.0",
@@ -71,7 +70,7 @@ git_wiki_builder = ["templates/*", "prompts/*"]
 
 [tool.black]
 line-length = 79
-target-version = ['py38']
+target-version = ['py39']
 include = '\.pyi?$'
 extend-exclude = '''
 /(
@@ -101,7 +100,7 @@ max-line-length = 79
 extend-ignore = ["E203", "W503"]
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
@@ -114,6 +113,14 @@ warn_unused_ignores = true
 warn_no_return = true
 warn_unreachable = true
 strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "pydantic.*",
+    "openai.*",
+    "anthropic.*",
+]
+ignore_errors = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
