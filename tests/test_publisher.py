@@ -164,9 +164,9 @@ class TestWikiPublisher:
             result = publisher._clone_wiki_repository(wiki_path)
 
             assert result == mock_repo
-            mock_clone.assert_called_once_with(
-                "https://test-token@github.com/owner/repo.wiki.git", wiki_path
-            )
+            base_url = "https://x-access-token:test-token@github.com/"
+            expected_url = base_url + "owner/repo.wiki.git"
+            mock_clone.assert_called_once_with(expected_url, wiki_path)
 
     @patch("git_wiki_builder.publisher.git.Repo.init")
     @patch("git_wiki_builder.publisher.git.Repo.clone_from")
@@ -197,9 +197,10 @@ class TestWikiPublisher:
 
                 assert result == mock_repo
                 mock_init.assert_called_once_with(wiki_path)
+                base_url = "https://x-access-token:test-token@github.com/"
+                expected_url = base_url + "owner/repo.wiki.git"
                 mock_repo.create_remote.assert_called_once_with(
-                    "origin",
-                    "https://test-token@github.com/owner/repo.wiki.git",
+                    "origin", expected_url
                 )
                 mock_configure.assert_called_once_with(mock_repo)
 
