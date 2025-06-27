@@ -143,10 +143,12 @@ class WikiPublisher:
                 name = "Git Wiki Builder"
                 email = "git-wiki-builder@users.noreply.github.com"
 
-            # Configure git user
+            # Configure git user and credentials
             with repo.config_writer() as git_config:
                 git_config.set_value("user", "name", name)
                 git_config.set_value("user", "email", email)
+                # Configure credential helper to avoid password prompts
+                git_config.set_value("credential", "helper", "")
 
             logger.debug(f"Configured git user: {name} <{email}>")
 
@@ -160,6 +162,7 @@ class WikiPublisher:
                     "email",
                     "git-wiki-builder@users.noreply.github.com",
                 )
+                git_config.set_value("credential", "helper", "")
 
     def _update_wiki_pages(
         self, wiki_repo_path: Path, wiki_content: Dict[str, str]
