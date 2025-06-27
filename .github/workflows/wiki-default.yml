@@ -13,9 +13,10 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
+  actions: read
 
 jobs:
   generate-wiki:
@@ -37,10 +38,17 @@ jobs:
         run: pip install git-wiki-builder
 
       - name: Generate and publish wiki
-        run: git-wiki-builder
+        run: git-wiki-builder --dry-run --output-dir ./wiki-output
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+
+      - name: Upload generated wiki
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-wiki
+          path: wiki-output/
+          retention-days: 30
 
       - name: Generate wiki preview (for debugging)
         if: failure()
