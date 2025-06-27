@@ -146,6 +146,35 @@ def main(
                 "occur[/yellow]"
             )
 
+        # Get existing wiki content if not in dry-run mode
+        existing_wiki_content = {}
+        if not dry_run and config.github_token and config.github_repo:
+            with Progress(
+                SpinnerColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                console=console,
+            ) as progress:
+                task = progress.add_task(
+                    "Reading existing wiki...", total=None
+                )
+                try:
+                    publisher = WikiPublisher(config)
+                    existing_wiki_content = (
+                        publisher.get_existing_wiki_content()
+                    )
+                    progress.update(
+                        task,
+                        description=(
+                            f"Found {len(existing_wiki_content)} pages"
+                        ),
+                    )
+                except Exception as e:
+                    console.print(
+                        f"[yellow]Warning: Could not read existing wiki: "
+                        f"{e}[/yellow]"
+                    )
+                    progress.update(task, description="No existing wiki found")
+
         # Generate wiki content
         with Progress(
             SpinnerColumn(),
@@ -155,7 +184,7 @@ def main(
             task = progress.add_task("Generating wiki content...", total=None)
 
             generator = WikiGenerator(config, mock_mode=dry_run)
-            wiki_content = generator.generate()
+            wiki_content = generator.generate(existing_wiki_content)
 
             progress.update(
                 task, description="Wiki content generated successfully"

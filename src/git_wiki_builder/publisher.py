@@ -31,6 +31,39 @@ class WikiPublisher:
         if not config.github_repo:
             raise ValueError("GitHub repository is required for publishing")
 
+    def get_existing_wiki_content(self) -> Dict[str, str]:
+        """Get existing wiki content.
+
+        Returns:
+            Dictionary mapping page names to existing markdown content
+        """
+        logger.info("Reading existing wiki content")
+        existing_content = {}
+
+        # Verify repository access
+        self._verify_repository_access()
+
+        # Clone wiki repository to read existing content
+        with tempfile.TemporaryDirectory() as temp_dir:
+            wiki_repo_path = Path(temp_dir) / "wiki"
+            try:
+                self._clone_wiki_repository(wiki_repo_path)
+                # Read all .md files in the wiki repository
+                for md_file in wiki_repo_path.glob("*.md"):
+                    try:
+                        content = md_file.read_text(encoding="utf-8")
+                        page_name = self._filename_to_page_name(md_file.name)
+                        existing_content[page_name] = content
+                        logger.debug(f"Read existing page: {page_name}")
+                    except Exception as e:
+                        logger.warning(f"Could not read {md_file}: {e}")
+            except ValueError:
+                # Wiki doesn't exist yet, return empty content
+                logger.info("No existing wiki found")
+
+        logger.info(f"Found {len(existing_content)} existing wiki pages")
+        return existing_content
+
     def publish(self, wiki_content: Dict[str, str]) -> None:
         """Publish wiki content to GitHub.
 
@@ -111,6 +144,18 @@ class WikiPublisher:
 
                 # Configure git user
                 self._configure_git_user(repo)
+
+                # Create initial commit to establish the repository
+                # GitHub wikis need at least one commit to be recognized
+                initial_file = wiki_repo_path / "Home.md"
+                if not initial_file.exists():
+                    initial_file.write_text(
+                        "# Welcome\n\nWiki is being initialized...",
+                        encoding="utf-8",
+                    )
+                    repo.git.add(".")
+                    repo.index.commit("Initialize wiki repository")
+                    logger.info("Created initial commit for new wiki")
 
                 return repo
             else:
@@ -202,6 +247,24 @@ class WikiPublisher:
 
         return filename
 
+    def _filename_to_page_name(self, filename: str) -> str:
+        """Convert wiki filename to page name.
+
+        Args:
+            filename: Wiki filename
+
+        Returns:
+            Page name
+        """
+        # Remove .md extension
+        if filename.endswith(".md"):
+            filename = filename[:-3]
+
+        # Convert dashes back to spaces
+        page_name = filename.replace("-", " ")
+
+        return page_name
+
     def _commit_and_push_changes(
         self, repo: git.Repo, wiki_content: Dict[str, str]
     ) -> None:
@@ -227,14 +290,14 @@ class WikiPublisher:
                 # Push to remote
                 origin = repo.remote("origin")
 
-                # For new repositories, push to main/master branch
+                # Push to remote - GitHub wikis use master branch by default
                 try:
-                    origin.push("HEAD:main")
-                    logger.info("Pushed changes to main branch")
+                    origin.push("HEAD:master")
+                    logger.info("Pushed changes to master branch")
                 except git.exc.GitCommandError:
                     try:
-                        origin.push("HEAD:master")
-                        logger.info("Pushed changes to master branch")
+                        origin.push("HEAD:main")
+                        logger.info("Pushed changes to main branch")
                     except git.exc.GitCommandError:
                         # For existing wikis, just push
                         origin.push()

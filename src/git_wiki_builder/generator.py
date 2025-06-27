@@ -1,7 +1,7 @@
 """Wiki content generator using AI."""
 
 import logging
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from .ai_client import AIClient, MockAIClient
 from .config import Config
@@ -32,13 +32,21 @@ class WikiGenerator:
             MarkdownValidator(config) if not config.skip_validation else None
         )
 
-    def generate(self) -> Dict[str, str]:
+    def generate(
+        self, existing_wiki_content: Optional[Dict[str, str]] = None
+    ) -> Dict[str, str]:
         """Generate wiki content.
+
+        Args:
+            existing_wiki_content: Existing wiki content to consider
 
         Returns:
             Dictionary mapping page names to markdown content
         """
         logger.info("Starting wiki generation")
+
+        if existing_wiki_content is None:
+            existing_wiki_content = {}
 
         # Analyze project content
         project_analysis = self.content_analyzer.analyze()
@@ -54,7 +62,10 @@ class WikiGenerator:
             for page_name in pages:
                 logger.info(f"Generating content for {page_name}")
                 content = self._generate_page_content(
-                    page_name, section_name, project_analysis
+                    page_name,
+                    section_name,
+                    project_analysis,
+                    existing_wiki_content,
                 )
 
                 # Validate content if validation is enabled
@@ -74,7 +85,7 @@ class WikiGenerator:
 
         # Generate Home page
         home_content = self._generate_home_page(
-            project_analysis, wiki_structure
+            project_analysis, wiki_structure, existing_wiki_content
         )
         if self.validator:
             validation_result = self.validator.validate_content(home_content)
@@ -125,7 +136,11 @@ class WikiGenerator:
         return structure
 
     def _generate_page_content(
-        self, page_name: str, section_name: str, project_analysis: Any
+        self,
+        page_name: str,
+        section_name: str,
+        project_analysis: Any,
+        existing_wiki_content: Dict[str, str],
     ) -> str:
         """Generate content for a specific page.
 
@@ -154,6 +169,8 @@ class WikiGenerator:
             "has_docker": project_analysis.has_docker,
             "has_tests": project_analysis.has_tests,
             "has_ci_cd": project_analysis.has_ci_cd,
+            "existing_content": existing_wiki_content.get(page_name, ""),
+            "existing_pages": list(existing_wiki_content.keys()),
         }
 
         # Generate content using AI
@@ -162,7 +179,10 @@ class WikiGenerator:
         return content
 
     def _generate_home_page(
-        self, project_analysis: Any, wiki_structure: Dict[str, List[str]]
+        self,
+        project_analysis: Any,
+        wiki_structure: Dict[str, List[str]],
+        existing_wiki_content: Dict[str, str],
     ) -> str:
         """Generate the Home page content.
 
@@ -187,6 +207,8 @@ class WikiGenerator:
             "navigation": navigation,
             "key_features": project_analysis.key_features,
             "quick_start": project_analysis.quick_start_info,
+            "existing_content": existing_wiki_content.get("Home", ""),
+            "existing_pages": list(existing_wiki_content.keys()),
         }
 
         content = self.ai_client.generate_content(prompt, context)
