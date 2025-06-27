@@ -275,15 +275,10 @@ class ContentAnalyzer:
 
     def _extract_pyproject_deps(self, pyproject_path: Path) -> List[str]:
         """Extract dependencies from pyproject.toml."""
+        if tomllib is None:
+            return []
+
         try:
-            try:
-                import tomllib
-            except ImportError:
-                # Fallback for Python < 3.11
-                try:
-                    import tomli as tomllib
-                except ImportError:
-                    return []
 
             with open(pyproject_path, "rb") as f:
                 data = tomllib.load(f)
