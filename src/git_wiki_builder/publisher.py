@@ -90,7 +90,7 @@ class WikiPublisher:
             GitPython Repo object
         """
         wiki_url = (
-            f"https://{self.config.github_token}@github.com/"
+            f"https://x-access-token:{self.config.github_token}@github.com/"
             f"{self.config.github_repo}.wiki.git"
         )
 
