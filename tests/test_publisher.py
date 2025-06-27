@@ -189,6 +189,8 @@ class TestWikiPublisher:
 
         with tempfile.TemporaryDirectory() as temp_dir:
             wiki_path = Path(temp_dir) / "wiki"
+            # Create the wiki directory that the publisher expects
+            wiki_path.mkdir()
 
             with patch.object(
                 publisher, "_configure_git_user"
@@ -203,6 +205,11 @@ class TestWikiPublisher:
                     "origin", expected_url
                 )
                 mock_configure.assert_called_once_with(mock_repo)
+                # Check that initial commit was made
+                mock_repo.git.add.assert_called_once_with(".")
+                mock_repo.index.commit.assert_called_once_with(
+                    "Initialize wiki repository"
+                )
 
     @patch("git_wiki_builder.publisher.git.Repo.clone_from")
     def test_clone_wiki_repository_other_error(self, mock_clone: Mock) -> None:
@@ -411,7 +418,7 @@ class TestWikiPublisher:
 
         mock_repo.git.add.assert_called_once_with(".")
         mock_repo.index.commit.assert_called_once_with("Update Home page")
-        mock_origin.push.assert_called_once_with("HEAD:main")
+        mock_origin.push.assert_called_once_with("HEAD:master")
 
     def test_commit_and_push_changes_multiple_pages(self) -> None:
         """Test committing multiple pages."""
@@ -462,11 +469,11 @@ class TestWikiPublisher:
         mock_origin = Mock()
         mock_repo.remote.return_value = mock_origin
 
-        # Main branch push fails, master succeeds
+        # Master branch push fails, main succeeds
         from git.exc import GitCommandError
 
         mock_origin.push.side_effect = [
-            GitCommandError("push", "main failed"),
+            GitCommandError("push", "master failed"),
             None,
         ]
 
@@ -474,10 +481,10 @@ class TestWikiPublisher:
 
         publisher._commit_and_push_changes(mock_repo, wiki_content)
 
-        # Should try main first, then master
+        # Should try master first, then main
         assert mock_origin.push.call_count == 2
         mock_origin.push.assert_has_calls(
-            [call("HEAD:main"), call("HEAD:master")]
+            [call("HEAD:master"), call("HEAD:main")]
         )
 
     def test_commit_and_push_changes_generic_push(self) -> None:
@@ -491,12 +498,12 @@ class TestWikiPublisher:
         mock_origin = Mock()
         mock_repo.remote.return_value = mock_origin
 
-        # Both main and master fail, generic push succeeds
+        # Both master and main fail, generic push succeeds
         from git.exc import GitCommandError
 
         mock_origin.push.side_effect = [
-            GitCommandError("push", "main failed"),
             GitCommandError("push", "master failed"),
+            GitCommandError("push", "main failed"),
             None,
         ]
 
@@ -507,7 +514,7 @@ class TestWikiPublisher:
         # Should try all three push methods
         assert mock_origin.push.call_count == 3
         mock_origin.push.assert_has_calls(
-            [call("HEAD:main"), call("HEAD:master"), call()]
+            [call("HEAD:master"), call("HEAD:main"), call()]
         )
 
     def test_commit_and_push_changes_git_error(self) -> None:

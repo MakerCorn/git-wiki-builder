@@ -240,7 +240,7 @@ class TestWikiGenerator:
             )
 
             content = generator._generate_page_content(
-                "Installation", "Getting Started", mock_analysis
+                "Installation", "Getting Started", mock_analysis, {}
             )
 
             assert content == "Generated page content"
@@ -277,7 +277,7 @@ class TestWikiGenerator:
             )
 
             content = generator._generate_home_page(
-                mock_analysis, wiki_structure
+                mock_analysis, wiki_structure, {}
             )
 
             assert content == "Generated home content"
