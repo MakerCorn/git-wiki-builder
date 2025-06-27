@@ -559,17 +559,17 @@ class TestWikiPublisher:
 
         wiki_content = {"Home": "# Home\nWelcome to the wiki"}
 
-        with patch.object(
-            publisher, "_verify_repository_access"
-        ) as mock_verify, patch.object(
-            publisher, "_clone_wiki_repository"
-        ) as mock_clone, patch.object(
-            publisher, "_update_wiki_pages"
-        ) as mock_update, patch.object(
-            publisher, "_commit_and_push_changes"
-        ) as mock_commit, patch(
-            "git_wiki_builder.publisher.tempfile.TemporaryDirectory"
-        ) as mock_temp_dir:
+        with (
+            patch.object(
+                publisher, "_verify_repository_access"
+            ) as mock_verify,
+            patch.object(publisher, "_clone_wiki_repository") as mock_clone,
+            patch.object(publisher, "_update_wiki_pages") as mock_update,
+            patch.object(publisher, "_commit_and_push_changes") as mock_commit,
+            patch(
+                "git_wiki_builder.publisher.tempfile.TemporaryDirectory"
+            ) as mock_temp_dir,
+        ):
 
             # Mock temporary directory context manager
             mock_temp_dir.return_value.__enter__ = Mock(
