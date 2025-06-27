@@ -38,7 +38,7 @@ jobs:
         run: pip install git-wiki-builder
 
       - name: Generate and publish wiki
-        run: git-wiki-builder --dry-run --output-dir ./wiki-output
+        run: git-wiki-builder --output-dir ./wiki-output
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
