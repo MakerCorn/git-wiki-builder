@@ -279,7 +279,6 @@ class ContentAnalyzer:
             return []
 
         try:
-
             with open(pyproject_path, "rb") as f:
                 data = tomllib.load(f)
                 deps = data.get("project", {}).get("dependencies", [])
