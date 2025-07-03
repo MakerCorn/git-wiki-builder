@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "git-wiki-builder"
-version = "0.1.3"
+version = "v0.1.4"
 description = "AI-powered GitHub Wiki generator for automated documentation"
 readme = "README.md"
 license = {text = "MIT"}
@@ -100,7 +100,7 @@ max-line-length = 79
 extend-ignore = ["E203", "W503"]
 
 [tool.mypy]
-python_version = "3.9"
+python_version = "v0.1.4"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
