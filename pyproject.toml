@@ -9,7 +9,7 @@ description = "AI-powered GitHub Wiki generator for automated documentation"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "Git Wiki Builder Team", email = "support@example.com"}
+    {name = "Git Wiki Builder Team", email = "support@visland.com"}
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -57,10 +57,10 @@ dev = [
 git-wiki-builder = "git_wiki_builder.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/example/git-wiki-builder"
-Repository = "https://github.com/example/git-wiki-builder"
-Issues = "https://github.com/example/git-wiki-builder/issues"
-Documentation = "https://github.com/example/git-wiki-builder/wiki"
+Homepage = "https://visland.com"
+Repository = "https://github.com/makercorn/git-wiki-builder"
+Issues = "https://github.com/makercorn/git-wiki-builder/issues"
+Documentation = "https://github.com/makercorn/git-wiki-builder/wiki"
 
 [tool.setuptools.packages.find]
 where = ["src"]
